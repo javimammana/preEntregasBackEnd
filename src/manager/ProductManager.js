@@ -25,10 +25,10 @@ class ProductManager {
         }
     }
 
-    validate(elemento) {
-        const {title, description, price, thumbnail, code, stock, category} = elemento;
-        return (!title || !description || !price || !thumbnail || !code || !stock || !category) ? false : true;
-    }
+    // validate(elemento) {
+    //     const {title, description, price, thumbnail, code, stock, category} = elemento;
+    //     return (!title || !description || !price || !thumbnail || !code || !stock || !category) ? false : true;
+    // }
 
     async addProduct(elemento) {
 

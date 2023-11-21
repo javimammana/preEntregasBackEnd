@@ -1,6 +1,8 @@
-import { CartManager, ItemCart } from "../manager/CartManager.js";
+import { CartManager } from "../manager/CartManager.js";
 // import { ProductManager } from "../manager/ProductManager.js";
 import { Router } from "express";
+
+
 
 const router = Router();
 const manager = new CartManager ("./src/data/carrito.json");
@@ -37,9 +39,41 @@ router.post ("/:cid/product/:pid", async (req, res) => {
         })
     } catch (e) {
         res.json ({
+            error: e.massage,
+        })
+    }
+})
+
+router.delete ("/:cid", async(req, res) => {
+    const  { cid } = req.params;
+
+        try {
+        await manager.deleteCart(Number(cid));
+        res.json ({
+            message: "Carrito eliminado"
+        })
+    } catch (e) {
+        res.json ({
             error: "Error al agregar producto al cerrito",
         })
     }
+
+})
+
+router.delete ("/:cid/product/:pid",async (req, res) => {
+    const { cid, pid } = req.params;
+
+    try {
+        await manager.deleteItem(Number(cid), Number(pid));
+        res.json ({
+            message: "Carrito eliminado"
+        })
+    } catch (e) {
+        res.json ({
+            error: "Error al agregar producto al cerrito",
+        })
+    }
+
 })
 
 

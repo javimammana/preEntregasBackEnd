@@ -9,5 +9,16 @@
 		"status": true,
 		"category": "hjkfhsdkljh",
 		"id": 1
+	},
+	{
+		"title": "hola",
+		"description": "jkhjkhkjh",
+		"price": 45,
+		"thumbnail": [],
+		"code": "fil006",
+		"stock": 12,
+		"status": true,
+		"category": "hjkfhsdkljh",
+		"id": 2
 	}
 ]

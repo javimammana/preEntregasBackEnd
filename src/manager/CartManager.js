@@ -50,24 +50,20 @@ class CartManager {
         }
         return "Not found - El carrito no existe";
     }
-
-
+    
     async addProductInCart (cid, pid) {
         console.log(cid)
         console.log(pid)
-        const carrito = this.src(cid);
+        const carrito = await this.src(cid);
 
         if (carrito) {
             console.log("carrito existe");
-            
-            const producto = prodManager.src(pid);
+            const producto = await prodManager.src(pid);
             console.log (producto);
 
             if (producto) {
                 console.log ("Producto existe");
-
-                const existe = carrito.products.find((prod) => prod.product === pid);
-            
+                const existe = await carrito.products.find((prod) => prod.product === pid);
                 console.log(existe);
 
                 if (!existe) {
@@ -100,10 +96,81 @@ class CartManager {
 
             } console.log ("Producto no existe");
             
-            return ;
+            return res.json ({
+                error: "El producto no existe"
+            })
+        } console.log("Carrito no existe");
+        return res.json ({
+            error: "El carrito no existe"
+        })
+    }
+
+    async deleteCart (cid) {
+        const carrito = this.src(cid);
+        console.log (carrito);
+        if (carrito) {
+            await this.carts.splice(this.carts.indexOf(carrito), 1);
+            console.log ("Se elimano el Carrito");
+
+            const respuesta = await this.saveCart (this.carts);
+            return !respuesta
+            ? console.log ("Carrito actualizado")
+            : console.log ("Error al actualizar carrito");
+
+        } console.log ("El Carrito no existe");
+        return;
+    }
+
+    async deleteItem (cid, pid) {
+
+        console.log(cid)
+        console.log(pid)
+        const carrito = this.src(cid);
+
+        if (carrito) {
+            console.log("carrito existe");
+
+                const existe = carrito.products.find((prod) => prod.product === pid);
+                console.log(existe);
+
+                if (existe) {
+                    console.log ("producto existe en carrito")
+                    console.log (existe.quantity);
+                    if (existe.quantity > 1) {
+                        console.log ("mayo");
+                        const addItem = await {
+                            ...existe, 
+                            quantity: (existe.quantity-1)
+                        }
+        
+                            console.log (addItem);
+        
+                            await carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
+                            console.log("Se borra item del carrito")
+        
+                            console.log(carrito.products);
+        
+                            const respuesta = await this.saveCart (this.carts);
+                            return !respuesta
+                            ? console.log ("Carrito actualizado")
+                            : console.log ("Error al actualizar carrito");
+                    } 
+                    
+                    console.log("Menor");
+
+                    await carrito.products.splice(carrito.products.indexOf(existe),1);
+
+                    const respuesta = await this.saveCart (this.carts);
+                    return !respuesta
+                    ? console.log ("Carrito actualizado")
+                    : console.log ("Error al actualizar carrito");
+
+                } 
+                console.log ("El producto no existe dentro del carrito");
+                return;
+
         } console.log("Carrito no existe");
         return ;
-
     }
 
 
@@ -116,4 +183,4 @@ class ItemCart {
     }
 }
 
-export { CartManager, ItemCart };
+export { CartManager };

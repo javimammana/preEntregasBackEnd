@@ -41,6 +41,4 @@ function validateProd (req, res, next) {
     next();
 }
 
-
-
 export { validateProd };
