@@ -39,7 +39,7 @@ router.post ("/:cid/product/:pid", async (req, res) => {
         })
     } catch (e) {
         res.json ({
-            error: e.massage,
+            error: e.message,
         })
     }
 })
@@ -54,10 +54,9 @@ router.delete ("/:cid", async(req, res) => {
         })
     } catch (e) {
         res.json ({
-            error: "Error al agregar producto al cerrito",
+            error: e.message,
         })
     }
-
 })
 
 router.delete ("/:cid/product/:pid",async (req, res) => {
@@ -70,13 +69,9 @@ router.delete ("/:cid/product/:pid",async (req, res) => {
         })
     } catch (e) {
         res.json ({
-            error: "Error al agregar producto al cerrito",
+            error: e.message,
         })
     }
-
 })
-
-
-
 
 export default router;

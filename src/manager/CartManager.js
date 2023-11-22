@@ -1,7 +1,6 @@
 import fs from "fs"
 import { ProductManager } from "../manager/ProductManager.js";
 
-
 const prodManager = new ProductManager("./src/data/productos.json");
 
 class CartManager {
@@ -45,26 +44,22 @@ class CartManager {
     getCartById(id) {
         const cart = this.src(id);
         if (cart) {
-            // console.log (cart.products);
             return cart.products;
         }
         return "Not found - El carrito no existe";
     }
     
-    async addProductInCart (cid, pid) {
-        console.log(cid)
-        console.log(pid)
+    async addProductInCart (cid, pid, res) {
+
         const carrito = await this.src(cid);
 
         if (carrito) {
             console.log("carrito existe");
             const producto = await prodManager.src(pid);
-            console.log (producto);
 
             if (producto) {
                 console.log ("Producto existe");
                 const existe = await carrito.products.find((prod) => prod.product === pid);
-                console.log(existe);
 
                 if (!existe) {
 
@@ -76,38 +71,32 @@ class CartManager {
                     return !respuesta
                     ? console.log ("Carrito actualizado")
                     : console.log ("Error al actualizar carrito");
-                } console.log ("producto ya existe en carrito")
-
+                } 
+                console.log ("producto ya existe en carrito")
                 const addItem = {
                     ...existe, 
                     quantity: (existe.quantity+1)}
 
-                    console.log (addItem);
-
                     carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
                     console.log("Se agrega item al producto en carrito")
-
-                    console.log(carrito.products);
 
                     const respuesta = await this.saveCart (this.carts);
                     return !respuesta
                     ? console.log ("Carrito actualizado")
                     : console.log ("Error al actualizar carrito");
 
-            } console.log ("Producto no existe");
-            
-            return res.json ({
-                error: "El producto no existe"
-            })
-        } console.log("Carrito no existe");
-        return res.json ({
-            error: "El carrito no existe"
-        })
+            }
+            console.log ("Producto no existe");
+            throw Error ("El producto no existe")
+        } 
+        console.log("Carrito no existe");
+        throw Error ("El carrito no existe")
     }
 
     async deleteCart (cid) {
+
         const carrito = this.src(cid);
-        console.log (carrito);
+
         if (carrito) {
             await this.carts.splice(this.carts.indexOf(carrito), 1);
             console.log ("Se elimano el Carrito");
@@ -117,46 +106,37 @@ class CartManager {
             ? console.log ("Carrito actualizado")
             : console.log ("Error al actualizar carrito");
 
-        } console.log ("El Carrito no existe");
-        return;
+        }
+        console.log ("El Carrito no existe");
+        throw Error ("El carrito no existe")
     }
 
     async deleteItem (cid, pid) {
 
-        console.log(cid)
-        console.log(pid)
         const carrito = this.src(cid);
 
         if (carrito) {
             console.log("carrito existe");
-
-                const existe = carrito.products.find((prod) => prod.product === pid);
-                console.log(existe);
+            const existe = carrito.products.find((prod) => prod.product === pid);
 
                 if (existe) {
                     console.log ("producto existe en carrito")
-                    console.log (existe.quantity);
+
                     if (existe.quantity > 1) {
-                        console.log ("mayo");
+
                         const addItem = await {
                             ...existe, 
                             quantity: (existe.quantity-1)
                         }
         
-                            console.log (addItem);
+                        await carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
+                        console.log("Se borra item del carrito")
         
-                            await carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
-                            console.log("Se borra item del carrito")
-        
-                            console.log(carrito.products);
-        
-                            const respuesta = await this.saveCart (this.carts);
-                            return !respuesta
-                            ? console.log ("Carrito actualizado")
-                            : console.log ("Error al actualizar carrito");
+                        const respuesta = await this.saveCart (this.carts);
+                        return !respuesta
+                        ? console.log ("Carrito actualizado")
+                        : console.log ("Error al actualizar carrito");
                     } 
-                    
-                    console.log("Menor");
 
                     await carrito.products.splice(carrito.products.indexOf(existe),1);
 
@@ -167,13 +147,11 @@ class CartManager {
 
                 } 
                 console.log ("El producto no existe dentro del carrito");
-                return;
-
-        } console.log("Carrito no existe");
-        return ;
+                throw Error ("El producto no esta en el carrito");
+        }
+        console.log("Carrito no existe");
+        throw Error ("El carrito no existe");
     }
-
-
 }
 
 class ItemCart {

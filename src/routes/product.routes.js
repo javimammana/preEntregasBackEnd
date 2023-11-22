@@ -33,7 +33,7 @@ router.get ("/:pid", async (req, res) => {
 router.post ("/", validateProd, async (req, res) => {
     const {title, description, price, code, stock, category} = req.body;
     const producto = new Product (title, description, price, code, stock, category);
-    console.log (producto);
+    //console.log (producto);
 
     try {
         await manager.addProduct(producto);
@@ -43,7 +43,7 @@ router.post ("/", validateProd, async (req, res) => {
         });
     } catch (e) {
         res.json ({
-            error: e.massage,
+            error: e.message,
         });
     }
 });
@@ -63,17 +63,25 @@ router.put ("/:pid", validateProd, async (req,res) => {
         });
     } catch (e) {
         res.json ({
-            error: "Error al actualizar Producto",
+            error: e.message,
         });
     }
-
-    
 })
 
-router.delete ("/:pid", (req, res) => {
+router.delete ("/:pid", async (req, res) => {
     console.log (req.params);
     const { pid } = req.params;
-    manager.deleteProduct(Number(pid));
+    
+    try {
+        await manager.deleteProduct(Number(pid));
+        res.json ({
+            message: "Producto eliminado",
+        });
+    } catch (e) {
+        res.json ({
+            error: e.message,
+        });
+    }
 })
 
 
