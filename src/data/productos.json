@@ -86,5 +86,16 @@
 		"status": true,
 		"category": "Prod",
 		"id": 8
+	},
+	{
+		"title": "Producto9",
+		"description": "Este es el producto N9",
+		"price": 1000,
+		"thumbnail": [],
+		"code": "prd009",
+		"stock": 12,
+		"status": true,
+		"category": "Prod",
+		"id": 9
 	}
 ]

@@ -73,9 +73,12 @@ class CartManager {
                     : console.log ("Error al actualizar carrito");
                 } 
                 console.log ("producto ya existe en carrito")
-                const addItem = {
-                    ...existe, 
-                    quantity: (existe.quantity+1)}
+
+                if (existe.quantity < producto.stock) {
+
+                    const addItem = {
+                        ...existe, 
+                        quantity: (existe.quantity+1)}
 
                     carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
                     console.log("Se agrega item al producto en carrito")
@@ -83,7 +86,10 @@ class CartManager {
                     const respuesta = await this.saveCart (this.carts);
                     return !respuesta
                     ? console.log ("Carrito actualizado")
-                    : console.log ("Error al actualizar carrito");
+                    : console.log ("Error al actualizar carrito");       
+                }
+                console.log("Limite de stock");
+                throw Error (`Limite de ${producto.stock} productos en stock`)
 
             }
             console.log ("Producto no existe");
