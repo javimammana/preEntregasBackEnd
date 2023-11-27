@@ -37,8 +37,8 @@ class CartManager {
 
         const respuesta = await this.saveCart (this.carts);
         return !respuesta
-        ? console.log ("carrito creado")
-        : console.log ("Error al crear carrito");
+        ? {error: "carrito creado"}
+        : {error: "Error al crear carrito"};
     }
 
     getCartById(id) {
@@ -69,10 +69,10 @@ class CartManager {
 
                     const respuesta = await this.saveCart (this.carts);
                     return !respuesta
-                    ? console.log ("Carrito actualizado")
-                    : console.log ("Error al actualizar carrito");
+                    ? {error: "Carrito actualizado"}
+                    : {error: "Error al actualizar carrito"};
                 } 
-                console.log ("producto ya existe en carrito")
+                console.log ("producto en carrito")
 
                 if (existe.quantity < producto.stock) {
 
@@ -81,22 +81,22 @@ class CartManager {
                         quantity: (existe.quantity+1)}
 
                     carrito.products.splice(carrito.products.indexOf(existe),1,addItem);
-                    console.log("Se agrega item al producto en carrito")
+                    console.log("Se agrega item a producto en carrito")
 
                     const respuesta = await this.saveCart (this.carts);
                     return !respuesta
-                    ? console.log ("Carrito actualizado")
-                    : console.log ("Error al actualizar carrito");       
+                    ? {error: "Carrito actualizado"}
+                    : {error: "Error al actualizar carrito"};       
                 }
                 console.log("Limite de stock");
-                throw Error (`Limite de ${producto.stock} productos en stock`)
+                return {error: `Limite de ${producto.stock} productos en stock`};
 
             }
             console.log ("Producto no existe");
-            throw Error ("El producto no existe")
+            return {error: `El producto ID: ${pid} no existe`};
         } 
         console.log("Carrito no existe");
-        throw Error ("El carrito no existe")
+        return {error: `El carrito ID: ${cid} no existe`};
     }
 
     async deleteCart (cid) {
@@ -109,12 +109,12 @@ class CartManager {
 
             const respuesta = await this.saveCart (this.carts);
             return !respuesta
-            ? console.log ("Carrito actualizado")
-            : console.log ("Error al actualizar carrito");
+            ? {error: "Carrito actualizado"}
+            : {error: "Error al actualizar carrito"};
 
         }
         console.log ("El Carrito no existe");
-        throw Error ("El carrito no existe")
+        return {error: `El carrito ID: ${cid} no existe`};
     }
 
     async deleteItem (cid, pid) {
@@ -140,23 +140,23 @@ class CartManager {
         
                         const respuesta = await this.saveCart (this.carts);
                         return !respuesta
-                        ? console.log ("Carrito actualizado")
-                        : console.log ("Error al actualizar carrito");
+                        ? {error: "Carrito actualizado"}
+                        : {error: "Error al actualizar carrito"};
                     } 
 
                     await carrito.products.splice(carrito.products.indexOf(existe),1);
 
                     const respuesta = await this.saveCart (this.carts);
                     return !respuesta
-                    ? console.log ("Carrito actualizado")
-                    : console.log ("Error al actualizar carrito");
+                    ? {error: "Carrito actualizado"}
+                    : {error: "Error al actualizar carrito"};
 
                 } 
                 console.log ("El producto no existe dentro del carrito");
-                throw Error ("El producto no esta en el carrito");
+                return {error: `El producto ID: ${pid} no esta en el carrito`};
         }
         console.log("Carrito no existe");
-        throw Error ("El carrito no existe");
+        return {error: `El carrito ID: ${cid} no existe`};
     }
 }
 

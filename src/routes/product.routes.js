@@ -33,16 +33,17 @@ router.get ("/:pid", async (req, res) => {
 router.post ("/", validateProd, async (req, res) => {
     const {title, description, price, code, stock, category} = req.body;
     const producto = new Product (title, description, price, code, stock, category);
-    //console.log (producto);
 
-    try {
-        await manager.addProduct(producto);
+    try { const addProduct = await manager.addProduct(producto);
+        if (addProduct?.error) { return res.status(409).json({error: addProduct.error})
+            }
+
         res.json ({
             message: "Producto Creado",
             producto,
         });
     } catch (e) {
-        res.json ({
+            res.status(500).json ({
             error: e.message,
         });
     }
@@ -56,13 +57,16 @@ router.put ("/:pid", validateProd, async (req,res) => {
     const producto = new Product (title, description, price, code, stock, category);
 
     try {
-        await manager.updateProduct(Number(pid), producto);
-        res.json ({
+        const upDateProduct = await manager.updateProduct(Number(pid), producto);
+
+        if (upDateProduct?.error) { return res.status(409).json({error: upDateProduct.error})
+            }
+            res.json ({
             message: "Producto Actualizado",
             producto,
         });
-    } catch (e) {
-        res.json ({
+        } catch (e) {
+            res.status(500).json ({
             error: e.message,
         });
     }
@@ -72,13 +76,16 @@ router.delete ("/:pid", async (req, res) => {
     console.log (req.params);
     const { pid } = req.params;
     
-    try {
-        await manager.deleteProduct(Number(pid));
+    try { const deleteProduct = await manager.deleteProduct(Number(pid));
+
+        if (deleteProduct?.error) {
+            return res.status(409).json({error: deleteProduct.error})
+        }
         res.json ({
             message: "Producto eliminado",
         });
     } catch (e) {
-        res.json ({
+        res.status(500).json ({
             error: e.message,
         });
     }

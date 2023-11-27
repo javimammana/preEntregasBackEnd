@@ -40,11 +40,11 @@ class ProductManager {
 
                     const respuesta = await this.saveProduct(this.productos);
                     return !respuesta 
-                    ? console.log ("Producto agregado a la base") 
-                    : console.log("Hubo un error agregar el producto a la base");
+                    ? {error: "Producto agregado a la base"} 
+                    : {error: "Hubo un error agregar el producto a la base"};
                 } 
-                console.log ("Producto existente");
-                throw Error (`El codigo ${elemento.code} del producto ya existe`);
+                console.log ("Producto OK");
+                return {error:`El codigo ${elemento.code} del producto ya existe`};
         }
         console.log ("Datos incompletos");
         return;
@@ -72,11 +72,11 @@ class ProductManager {
 
             const respuesta = await this.saveProduct(this.productos);
             return !respuesta
-            ? console.log ("Producto borrado de la Base")
-            : console.log("Hubo un error al borrar el producto de la base");
+            ? {error: "Producto borrado de la Base"}
+            : {error: "Hubo un error al borrar el producto de la base"};
         }
-        console.log (`El producto id:${id} no existe para ser eliminado`);
-        throw Error (`El producto id:${id} no existe para ser eliminado`);
+        console.log (`Id:${id} no existe`);
+        return {error: `El producto id:${id} no existe para ser eliminado`};
     }
 
     async updateProduct (id, elemento) {
@@ -99,14 +99,14 @@ class ProductManager {
 
                     const respuesta = await this.saveProduct(this.productos);
                     return !respuesta
-                    ? console.log ("Producto modificado en la Base")
-                    : console.log("Hubo un error al modificar el producto en la base");
+                    ? {error: "Producto modificado en la Base"}
+                    : {error: "Hubo un error al modificar el producto en la base"}
             }
-            console.log ("ID de producto existente");
-            throw Error (`El codigo ${product.code} ya existe`);
+            console.log ("Producto OK");
+            return {error: `El codigo ${product.code} ya existe`};
         }
-        console.log (`El producto id:${id} no existe para ser modificado`);
-        throw Error (`El producto id:${id} no existe para ser modificado`);
+        console.log (`Id:${id} no existe`);
+        return {error: `El producto id:${id} no existe para ser modificado`};
     }
 }
 

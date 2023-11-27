@@ -32,13 +32,14 @@ router.get ("/:cid", (req, res) => {
 router.post ("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params;
 
-    try {
-        await manager.addProductInCart (Number(cid), Number(pid));
+    try { const addProdCart = await manager.addProductInCart (Number(cid), Number(pid));
+
+        if (addProdCart?.error) {return res.status(409).json({error: addProdCart.error})}
         res.json ({
             message: "Producto Agregado a Carrito"
         })
     } catch (e) {
-        res.json ({
+        res.status(500).json ({
             error: e.message,
         })
     }
@@ -47,13 +48,14 @@ router.post ("/:cid/product/:pid", async (req, res) => {
 router.delete ("/:cid", async(req, res) => {
     const  { cid } = req.params;
 
-        try {
-        await manager.deleteCart(Number(cid));
+        try { const deleteCart = await manager.deleteCart(Number(cid));
+
+            if (deleteCart?.error) {return res.status(409).json({error: deleteCart.error})}
         res.json ({
             message: "Carrito eliminado"
         })
     } catch (e) {
-        res.json ({
+        res.status(500).json ({
             error: e.message,
         })
     }
@@ -62,13 +64,14 @@ router.delete ("/:cid", async(req, res) => {
 router.delete ("/:cid/product/:pid",async (req, res) => {
     const { cid, pid } = req.params;
 
-    try {
-        await manager.deleteItem(Number(cid), Number(pid));
+    try { const deleteItem = await manager.deleteItem(Number(cid), Number(pid));
+        if (deleteItem?.error) {return res.status(409).json({error: deleteItem.error})}
+
         res.json ({
             message: "Carrito eliminado"
         })
     } catch (e) {
-        res.json ({
+        res.status(500).json ({
             error: e.message,
         })
     }
